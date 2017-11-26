@@ -34,7 +34,7 @@ Use at own risk
 
 from multiprocessing.dummy import Pool as ThreadPool
 
-import requests
+import requests, os
 
 image_links = []
 r = requests.get("http://simonstalenhag.se/", stream=True)
@@ -46,10 +46,9 @@ for x in r.text.split("href=\""):
 
 
 def download_image(url):
-    try:
-        with open(url.split("/")[-1]) as test_file:  # Only opens if the file exists, otherwise errors out
-            print("Already downloaded:", url)
-    except FileNotFoundError or FileExistsError:
+    if os.path.exists(url.split("/")[-1]):
+        print("Already downloaded:", url)
+    else:
         try:
             r = requests.get(url, timeout=10)
         except:
